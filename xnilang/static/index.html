@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XniLang</title>
+
+    <!-- Stylesheets -->
+    <link href="styles/main.css" type="text/css" rel="stylesheet">
+
+    <!-- Libraries -->
+    <script type="text/javascript" src="libraries/jquery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="libraries/kendo-ui/js/kendo.ui.core.min.js"></script>
+    <link href="libraries/kendo-ui/styles/kendo.common.min.css" type="text/css" rel="stylesheet">
+    <link href="libraries/kendo-ui/styles/kendo.metro.min.css" type="text/css" rel="stylesheet">
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="scripts/ui.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="code_page">
+            <textarea id="code_box">
+(define cross ((line (0 0) (50 50)) (line (50 0) (0 50)) (circle (25 25) 25)))
+(place cross (50 50)) (loop 100 ( (shift cross right) (shift cross up)))
+(erase cross)
+            </textarea>
+            <div id="code_page_buttons">
+                <button id="eval_button">Evaluate</button>
+            </div>
+        </div>
+        <div id="preview_page">
+            <iframe id="preview_frame" name="preview_frame_msc"></iframe>
+            <div id="preview_page_buttons">
+                <button id="back_button">Back</button>
+            </div>
+        </div>
+        <form id="submit_form" action="/request/evaluate" target="preview_frame_msc" method="post">
+            <textarea name="script" id="submit_form_script"></textarea>
+        </form>
+    </div>
+</body>
+</html>

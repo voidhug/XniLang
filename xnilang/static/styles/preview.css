@@ -1,0 +1,15 @@
+/*
+ *  Copyright 2015 XiaoJSoft Studio.
+ *
+ *  Use of this source code is governed by a proprietary license. You can not read, change or
+ *  redistribute this source code unless you have a written authorization from the copyright
+ *  holder listed above.
+ */
+
+html, body {
+    position: absolute;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+}
