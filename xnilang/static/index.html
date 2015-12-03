@@ -21,7 +21,8 @@
         <div id="code_page">
             <textarea id="code_box">
 (define cross ((line (0 0) (50 50)) (line (50 0) (0 50)) (circle (25 25) 25)))
-(place cross (50 50)) (loop 100 ( (shift cross right) (shift cross up)))
+(place cross (50 50))
+(loop 100 ((shift cross right) (shift cross up)))
 (erase cross)
             </textarea>
             <div id="code_page_buttons">
