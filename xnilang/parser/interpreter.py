@@ -14,6 +14,8 @@ import xnilang.parser.error as _error
 
 
 class Interpreter:
+    """Tokens interpreter."""
+
     def __init__(self, tokenizer):
         """Initialize the interpreter.
 
