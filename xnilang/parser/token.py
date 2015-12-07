@@ -311,13 +311,14 @@ class Tokenizer:
             #  Get the initial character of the token.
             initial_char = self.get_current_character()
 
-            if initial_char.isdigit():
+            if initial_char.isdigit() or initial_char == "-":
                 #
                 #  Process operands.
                 #
 
                 #  Initialize.
                 has_decimal_dot = False
+                has_minus = False
                 symbol = ""
                 position = self.get_cursor()
 
@@ -334,6 +335,18 @@ class Tokenizer:
 
                             #  Mark the decimal dot flag.
                             has_decimal_dot = True
+
+                        #  Move the cursor.
+                        self.move_cursor_by_offset(1)
+                    elif current == "-":
+                        if has_minus:
+                            raise _error.ParserError("Duplicated minus operator.")
+                        else:
+                            #  Append current character to the symbol.
+                            symbol += current
+
+                            #  Mark the minus operator flag.
+                            has_minus = True
 
                         #  Move the cursor.
                         self.move_cursor_by_offset(1)
