@@ -67,8 +67,10 @@ class FrameEvaluator:
         :param y2: The Y axis value of the second point.
         """
 
+        self._append_line("$ctx.beginPath();")
         self._append_line("$ctx.moveTo(%s, %s);" % (str(x1), str(y1)))
         self._append_line("$ctx.lineTo(%s, %s);" % (str(x2), str(y2)))
+        self._append_line("$ctx.closePath();")
         self._append_line("$ctx.stroke();")
 
     def emit_draw_circle(self, x, y, radius):
