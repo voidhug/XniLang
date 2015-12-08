@@ -236,6 +236,15 @@ class Interpreter:
 
             #  Create the AST node.
             return _ast.CircleCommand(center, radius)
+        elif cmd == "path":
+            #  Read the point list.
+            point_list = self._interpret_point_list()
+
+            #  Read the right parenthesis.
+            self._interpret_right_parenthesis()
+
+            #  Create the AST node.
+            return _ast.ClosedPathCommand(point_list)
         elif cmd == "area":
             #  Read the type.
             area_type = self._interpret_symbol()

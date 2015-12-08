@@ -396,6 +396,29 @@ class LineCommand(DrawCommand):
         return self.get_argument(1)
 
 
+class ClosedPathCommand(DrawCommand):
+    """Closed path command node."""
+
+    def __init__(self, point_list):
+        """Initialize the closed path command node.
+
+        :type point_list: PointListNode
+        :param point_list: The point list.
+        """
+
+        #  Let the base class initialize.
+        DrawCommand.__init__(self, "path", [point_list])
+
+    def get_path(self):
+        """Get the point list.
+
+        :rtype : PointListNode
+        :return: The point list.
+        """
+
+        return self.get_argument(0)
+
+
 class CircleAreaCommand(DrawCommand):
     """Circle area command node."""
 

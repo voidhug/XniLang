@@ -74,6 +74,21 @@ class Compiler:
             frame.emit_draw_circle(base_x + center.get_x().get_value(),
                                    base_y + center.get_y().get_value(),
                                    radius)
+        elif isinstance(cmd, _ast.ClosedPathCommand):
+            #  Convert.
+            origin = cmd.get_path()
+            path = []
+            for point_id in range(0, origin.get_point_count()):
+                point = origin.get_point(point_id)
+                path.append((base_x + point.get_x().get_value(),
+                             base_y + point.get_y().get_value()))
+
+            #  Safe check.
+            if len(path) < 3:
+                raise _error.CompilationError("A path should contains at least 3 points.")
+
+            #  Emit.
+            frame.emit_draw_path(path)
         elif isinstance(cmd, _ast.CircleAreaCommand):
             center = cmd.get_center()
             radius = cmd.get_radius().get_value()

@@ -89,6 +89,33 @@ class FrameEvaluator:
         self._append_line("$ctx.closePath();")
         self._append_line("$ctx.stroke();")
 
+    def emit_draw_path(self, path):
+        """Emit codes of drawing a path.
+
+        :type path: list[(int | float, int | float)]
+        :param path: The path.
+        """
+
+        #  Safe check.
+        if len(path) < 3:
+            raise ValueError("Invalid path.")
+
+        #  Start the path.
+        self._append_line("$ctx.beginPath();")
+
+        #  Move the cursor to the first point.
+        initial_point = path[0]
+        self._append_line("$ctx.moveTo(%s, %s);" % (str(initial_point[0]), str(initial_point[1])))
+
+        #  Draw the path.
+        for point_id in range(1, len(path)):
+            x, y = path[point_id]
+            self._append_line("$ctx.lineTo(%s, %s);" % (str(x), str(y)))
+
+        #  Close the path, stroke and fill.
+        self._append_line("$ctx.closePath();")
+        self._append_line("$ctx.stroke();")
+
     def emit_draw_circle_area(self, x, y, radius):
         """Emit codes of drawing a circle area.
 
