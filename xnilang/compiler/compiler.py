@@ -74,6 +74,35 @@ class Compiler:
             frame.emit_draw_circle(base_x + center.get_x().get_value(),
                                    base_y + center.get_y().get_value(),
                                    radius)
+        elif isinstance(cmd, _ast.CircleAreaCommand):
+            center = cmd.get_center()
+            radius = cmd.get_radius().get_value()
+            frame.emit_draw_circle_area(base_x + center.get_x().get_value(),
+                                        base_y + center.get_y().get_value(),
+                                        radius)
+        elif isinstance(cmd, _ast.SquareAreaCommand):
+            center = cmd.get_center()
+            width = cmd.get_width().get_value()
+            height = cmd.get_height().get_value()
+            frame.emit_draw_square_area(base_x + center.get_x().get_value(),
+                                        base_y + center.get_y().get_value(),
+                                        width,
+                                        height)
+        elif isinstance(cmd, _ast.ClosedPathAreaCommand):
+            #  Convert.
+            origin = cmd.get_path()
+            path = []
+            for point_id in range(0, origin.get_point_count()):
+                point = origin.get_point(point_id)
+                path.append((base_x + point.get_x().get_value(),
+                             base_y + point.get_y().get_value()))
+
+            #  Safe check.
+            if len(path) < 3:
+                raise _error.CompilationError("A path should contains at least 3 points.")
+
+            #  Emit.
+            frame.emit_draw_path_area(path)
         else:
             raise RuntimeError("Invalid command.")
 

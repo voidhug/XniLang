@@ -26,7 +26,7 @@ class FrameEvaluator:
 
         #  Emit the startup code.
         self._append_line("var $ctx = %s.getContext(\"2d\");" % canvas)
-        self._append_line("$ctx.fillStyle = \"rgb(0, 0, 0)\";")
+        self._append_line("$ctx.fillStyle = \"rgb(255, 255, 255)\";")
         self._append_line("$ctx.strokeStyle = \"rgb(0, 0, 0)\";")
         self._append_line("$ctx.lineWidth = 1;")
 
@@ -88,6 +88,71 @@ class FrameEvaluator:
         self._append_line("$ctx.arc(%s, %s, %s, 0, 2 * Math.PI, false);" % (str(x), str(y), str(radius)))
         self._append_line("$ctx.closePath();")
         self._append_line("$ctx.stroke();")
+
+    def emit_draw_circle_area(self, x, y, radius):
+        """Emit codes of drawing a circle area.
+
+        :type x: int | float
+        :type y: int | float
+        :type radius: int | float
+        :param x: The X axis value of the center point.
+        :param y: The Y axis value of the center point.
+        :param radius: The radius.
+        """
+
+        self._append_line("$ctx.beginPath();")
+        self._append_line("$ctx.arc(%s, %s, %s, 0, 2 * Math.PI, false);" % (str(x), str(y), str(radius)))
+        self._append_line("$ctx.closePath();")
+        self._append_line("$ctx.stroke();")
+        self._append_line("$ctx.fill();")
+
+    def emit_draw_path_area(self, path):
+        """Emit codes of drawing a closed path area.
+
+        :type path: list[(int | float, int | float)]
+        :param path: The path.
+        """
+
+        #  Safe check.
+        if len(path) < 3:
+            raise ValueError("Invalid path.")
+
+        #  Start the path.
+        self._append_line("$ctx.beginPath();")
+
+        #  Move the cursor to the first point.
+        initial_point = path[0]
+        self._append_line("$ctx.moveTo(%s, %s);" % (str(initial_point[0]), str(initial_point[1])))
+
+        #  Draw the path.
+        for point_id in range(1, len(path)):
+            x, y = path[point_id]
+            self._append_line("$ctx.lineTo(%s, %s);" % (str(x), str(y)))
+
+        #  Close the path, stroke and fill.
+        self._append_line("$ctx.closePath();")
+        self._append_line("$ctx.stroke();")
+        self._append_line("$ctx.fill();")
+
+    def emit_draw_square_area(self, x, y, width, height):
+        """Emit codes of drawing a square area.
+
+        :type x: int | float
+        :type y: int | float
+        :type width: int | float
+        :type height: int | float
+        :param x: The X axis value of the center point.
+        :param y: The Y axis value of the center point.
+        :param width: The square width.
+        :param height: The square height.
+        """
+
+        half_width = width / 2
+        half_height = height / 2
+        self.emit_draw_path_area([(x - half_width, y - half_height),
+                                  (x + half_width, y - half_height),
+                                  (x + half_width, y + half_height),
+                                  (x - half_width, y + half_height)])
 
     def get_script(self):
         """Get the emitted script.

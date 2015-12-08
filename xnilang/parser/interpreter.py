@@ -92,8 +92,10 @@ class Interpreter:
         #  Create the operand node.
         if operand.is_float_operand():
             return _ast.OperandNode(float(operand.get_symbol()))
-        else:
+        elif operand.is_integer_operand():
             return _ast.OperandNode(int(operand.get_symbol()))
+        else:
+            raise _error.ParserError("Not an operand.")
 
     def _interpret_left_parenthesis(self):
         """Interpret a left parenthesis.
@@ -234,6 +236,43 @@ class Interpreter:
 
             #  Create the AST node.
             return _ast.CircleCommand(center, radius)
+        elif cmd == "area":
+            #  Read the type.
+            area_type = self._interpret_symbol()
+
+            if area_type == "circle":
+                #  Read the center point.
+                center = self._interpret_point()
+
+                #  Read the radius.
+                radius = self._interpret_operand()
+
+                #  Read the right parenthesis.
+                self._interpret_right_parenthesis()
+
+                return _ast.CircleAreaCommand(center, radius)
+            elif area_type == "square":
+                #  Read the center point.
+                center = self._interpret_point()
+
+                #  Read the size.
+                width = self._interpret_operand()
+                height = self._interpret_operand()
+
+                #  Read the right parenthesis.
+                self._interpret_right_parenthesis()
+
+                return _ast.SquareAreaCommand(center, width, height)
+            elif area_type == "path":
+                #  Read the point list.
+                point_list = self._interpret_point_list()
+
+                #  Read the right parenthesis.
+                self._interpret_right_parenthesis()
+
+                return _ast.ClosedPathAreaCommand(point_list)
+            else:
+                raise _error.ParserError("Invalid area type.")
         elif cmd == "define":
             #  Read the target.
             target = self._interpret_target()
@@ -371,3 +410,35 @@ class Interpreter:
 
         #  Create the AST node.
         return _ast.MoveList(cmd_list)
+
+    def _interpret_point_list(self):
+        """Interpret a point list.
+
+        :rtype : _ast.PointListNode
+        :return: The point list.
+        :raise _error.ParserError: Raise this exception if some error occurred.
+        """
+
+        #  Read the left parenthesis.
+        self._interpret_left_parenthesis()
+
+        #  Initialize the point list.
+        point_list = []
+
+        while True:
+            #  Safe check.
+            if self.is_end():
+                raise _error.ParserError("Missing list end.")
+
+            if self.get_current_token().is_right_parenthesis():
+                #  Stop interpreting if current token is a right parenthesis.
+                break
+            else:
+                #  Interpret a point and append it to the point list.
+                point_list.append(self._interpret_point())
+
+        #  Read the right parenthesis.
+        self._interpret_right_parenthesis()
+
+        #  Create the AST node.
+        return _ast.PointListNode(point_list)

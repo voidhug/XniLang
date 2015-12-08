@@ -106,6 +106,57 @@ class PointNode(Node):
         return self._y
 
 
+class PointListNode(Node):
+    """Point list node."""
+
+    def __init__(self, point_list):
+        """Initialize the point list node.
+
+        :type point_list: list[PointNode]
+        :param point_list: The point list.
+        """
+
+        #  Let base class initialize.
+        Node.__init__(self)
+
+        #  Save the point list.
+        self._points = point_list
+
+    def is_valid_index(self, idx):
+        """Get whether an point index is valid.
+
+        :param idx: The point index.
+        :rtype : bool
+        :return: True if so.
+        """
+
+        return 0 <= idx < self.get_point_count()
+
+    def get_point_count(self):
+        """Get the point count.
+
+        :rtype : int
+        :return: The count.
+        """
+
+        return len(self._points)
+
+    def get_point(self, idx):
+        """Get specified point by its index.
+
+        :param idx: The point index.
+        :rtype : PointNode
+        :return: The point.
+        :raise IndexError: Raise this exception if the index is invalid.
+        """
+
+        #  Safe check.
+        if not self.is_valid_index(idx):
+            raise IndexError("Invalid point index.")
+
+        return self._points[idx]
+
+
 class DirectionNode(Node):
     """Direction node."""
 
@@ -343,6 +394,108 @@ class LineCommand(DrawCommand):
         """
 
         return self.get_argument(1)
+
+
+class CircleAreaCommand(DrawCommand):
+    """Circle area command node."""
+
+    def __init__(self, center, radius):
+        """Initialize the circle area command node.
+
+        :type center: PointNode
+        :type radius: OperandNode
+        :param center: The center point of the circle area.
+        :param radius: The radius of the circle area.
+        """
+
+        #  Let base class initialize.
+        DrawCommand.__init__(self, "area.circle", [center, radius])
+
+    def get_center(self):
+        """Get the center point of the circle area.
+
+        :rtype : PointNode
+        :return: The point.
+        """
+
+        return self.get_argument(0)
+
+    def get_radius(self):
+        """Get the radius of the circle area.
+
+        :rtype : OperandNode
+        :return: The radius.
+        """
+
+        return self.get_argument(1)
+
+
+class SquareAreaCommand(DrawCommand):
+    """Square area command node."""
+
+    def __init__(self, center, width, height):
+        """Initialize the square area command node.
+
+        :type center: PointNode
+        :type width: OperandNode
+        :type height: OperandNode
+        :param center: The center point of the square area.
+        :param width: The width of the square area.
+        :param height: The height of the square area.
+        """
+
+        #  Let the base class initialize.
+        DrawCommand.__init__(self, "area.square", [center, width, height])
+
+    def get_center(self):
+        """Get the center point of the square area.
+
+        :rtype : PointNode
+        :return: The point.
+        """
+
+        return self.get_argument(0)
+
+    def get_width(self):
+        """Get the width of the square area.
+
+        :rtype : OperandNode
+        :return: The width.
+        """
+
+        return self.get_argument(1)
+
+    def get_height(self):
+        """Get the height of the square area.
+
+        :rtype : OperandNode
+        :return: The height.
+        """
+
+        return self.get_argument(2)
+
+
+class ClosedPathAreaCommand(DrawCommand):
+    """Closed path area command node."""
+
+    def __init__(self, path):
+        """Initialize the closed path area command.
+
+        :type path: PointListNode
+        :param path: The path.
+        """
+
+        #  Let the base class initialize.
+        DrawCommand.__init__(self, "area.path", [path])
+
+    def get_path(self):
+        """Get the path.
+
+        :rtype : PointListNode
+        :return: The path.
+        """
+
+        return self.get_argument(0)
 
 
 class PlaceCommand(MoveCommand):
