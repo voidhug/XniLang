@@ -28,7 +28,7 @@ class FrameEvaluator:
         self._append_line("var $ctx = %s.getContext(\"2d\");" % canvas)
         self._append_line("$ctx.fillStyle = \"rgb(255, 255, 255)\";")
         self._append_line("$ctx.strokeStyle = \"rgb(0, 0, 0)\";")
-        self._append_line("$ctx.lineWidth = 1;")
+        self._append_line("$ctx.lineWidth = 2;")
 
     def get_canvas(self):
         """Get the canvas name.
@@ -130,8 +130,8 @@ class FrameEvaluator:
         self._append_line("$ctx.beginPath();")
         self._append_line("$ctx.arc(%s, %s, %s, 0, 2 * Math.PI, false);" % (str(x), str(y), str(radius)))
         self._append_line("$ctx.closePath();")
-        self._append_line("$ctx.stroke();")
         self._append_line("$ctx.fill();")
+        self._append_line("$ctx.stroke();")
 
     def emit_draw_path_area(self, path):
         """Emit codes of drawing a closed path area.
@@ -158,8 +158,8 @@ class FrameEvaluator:
 
         #  Close the path, stroke and fill.
         self._append_line("$ctx.closePath();")
-        self._append_line("$ctx.stroke();")
         self._append_line("$ctx.fill();")
+        self._append_line("$ctx.stroke();")
 
     def emit_draw_square_area(self, x, y, width, height):
         """Emit codes of drawing a square area.

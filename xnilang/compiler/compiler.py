@@ -37,6 +37,9 @@ class Compiler:
         #  Initialize the object manager.
         self._objects = {}
 
+        #  Initialize the display list.
+        self._display_list = []
+
         #  Initialize current frame.
         self._frame = None
 
@@ -147,14 +150,14 @@ class Compiler:
         frame.emit_clear()
 
         #  Draw objects.
-        for obj_name in self._objects:
+        for disp_id in range(0, len(self._display_list)):
             #  Get the information.
-            obj_info = self._objects[obj_name]
-            if obj_info["Visible"]:
-                #  Do all draw commands.
-                dw_list = obj_info["DrawList"]
-                for dw_id in range(0, dw_list.get_command_count()):
-                    self._compile_draw_command(obj_info["BaseX"], obj_info["BaseY"], dw_list.get_command(dw_id), frame)
+            obj_info = self._objects[self._display_list[disp_id]]
+
+            #  Do all draw commands.
+            dw_list = obj_info["DrawList"]
+            for dw_id in range(0, dw_list.get_command_count()):
+                self._compile_draw_command(obj_info["BaseX"], obj_info["BaseY"], dw_list.get_command(dw_id), frame)
 
     def _macro_redraw(self):
         """(Macro) Redraw visible objects to a new animation frame."""
@@ -185,10 +188,17 @@ class Compiler:
             if target_name not in self._objects:
                 raise _error.CompilationError("No such target.")
 
+            #  Remove the existed display object.
+            if self._objects[target_name]["Visible"]:
+                self._display_list.remove(target_name)
+
             #  Place the object to specified position.
             self._objects[target_name]["BaseX"] = position.get_x().get_value()
             self._objects[target_name]["BaseY"] = position.get_y().get_value()
             self._objects[target_name]["Visible"] = True
+
+            #  Append the object onto the top of the list.
+            self._display_list.append(target_name)
 
             #  Redraw.
             self._macro_redraw()
@@ -239,6 +249,9 @@ class Compiler:
 
             #  Mark the object as 'Invisible'.
             self._objects[target_name]["Visible"] = False
+
+            #  Remove the object from the display list.
+            self._display_list.remove(target_name)
 
             #  Redraw.
             self._macro_redraw()
