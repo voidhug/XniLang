@@ -318,7 +318,6 @@ class Tokenizer:
 
                 #  Initialize.
                 has_decimal_dot = False
-                has_minus = False
                 symbol = ""
                 position = self.get_cursor()
 
@@ -339,14 +338,11 @@ class Tokenizer:
                         #  Move the cursor.
                         self.move_cursor_by_offset(1)
                     elif current == "-":
-                        if has_minus:
-                            raise _error.ParserError("Duplicated minus operator.")
+                        if len(symbol) != 0:
+                            raise _error.ParserError("Invalid minus operator.")
                         else:
                             #  Append current character to the symbol.
                             symbol += current
-
-                            #  Mark the minus operator flag.
-                            has_minus = True
 
                         #  Move the cursor.
                         self.move_cursor_by_offset(1)
