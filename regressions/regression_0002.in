@@ -1,0 +1,2 @@
+(define _A_B_ ((circle (0 0) 50)))
+(place _A_B_ (50 50))

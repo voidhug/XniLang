@@ -1,0 +1,53 @@
+Status: OK
+Message:
+<html><head>
+<link href="/app/styles/preview.css" type="text/css" rel="stylesheet"><script type="text/javascript" src="/app/libraries/jquery/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+function StartAnimation() {
+var main = $("#main")[0];{var $frames = [];
+$frames.push(function() {{
+var $ctx = main.getContext("2d");
+$ctx.fillStyle = "rgb(255, 255, 255)";
+$ctx.strokeStyle = "rgb(0, 0, 0)";
+$ctx.lineWidth = 2;
+$ctx.clearRect(0, 0, main.width, main.height);
+$ctx.beginPath();
+$ctx.arc(50, 50, 50, 0, 2 * Math.PI, false);
+$ctx.closePath();
+$ctx.stroke();
+}});
+var $interval = 20;
+var $loop = true;
+var $current = 0;
+function next_frame() {
+    if ($current == $frames.length) {
+        return false;
+    } else {
+        $frames[$current].call(this);
+        $current++;
+        if ($current == $frames.length) {
+            if ($loop == true) {
+                $current = 0;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+}
+var $animator = setInterval(function() {
+    if (!next_frame()) {
+        clearInterval($animator);
+    }
+}, $interval);
+}
+}
+</script>
+<script type="text/javascript" src="/app/scripts/preview.js"></script>
+</head>
+<body>
+<canvas id="main" width="600" height="300"></canvas>
+
+</body></html>
