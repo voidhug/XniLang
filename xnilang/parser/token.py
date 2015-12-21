@@ -393,7 +393,7 @@ class Tokenizer:
 
                 #  Create the token.
                 return Token.create_right_parenthesis(position)
-            elif initial_char.isalpha():
+            elif initial_char.isalpha() or initial_char == "_":
                 #
                 #  Process symbols.
                 #
@@ -407,7 +407,7 @@ class Tokenizer:
                     #  Get current character.
                     current = self.get_current_character()
 
-                    if current.isalpha() or current.isdigit():
+                    if current.isalpha() or current.isdigit() or current == "_":
                         #  Move the cursor.
                         self.move_cursor_by_offset(1)
 
